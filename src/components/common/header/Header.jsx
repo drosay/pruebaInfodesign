@@ -1,67 +1,29 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   AppBar,
   Box,
-  Drawer,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
   Toolbar,
   Typography,
-  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link } from "react-router-dom";
+import HeaderDrawer from "./HeaderDrawer";
 import { COLORS } from "../../../constants/constants";
 import { menuItems } from "../../../constants/items";
 
 export default function Header() {
   const [active, setActive] = useState(false);
-  const [hover, setHover] = useState(false);
 
   const handleDrawerToggle = () => {
     setActive((prev) => !prev);
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: "right" }}>
-      <Typography
-        variant="h5"
-        sx={{ margin: "5px", color: COLORS.secondary, fontWeight: "bold" }}
-      >
-        Infodesign test
-      </Typography>
-      <List>
-        {menuItems.map((item, index) => (
-          <Fragment key={index}>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <Link
-                  style={{
-                    color: COLORS.text_primary,
-                    textDecoration: "none",
-                    fontWeight: "bold",
-                    marginLeft: "auto",
-                  }}
-                  to={item.to}
-                >
-                  {item.text}
-                </Link>
-              </ListItemButton>
-            </ListItem>
-            <Divider />
-          </Fragment>
-        ))}
-      </List>
-    </Box>
-  );
-
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
         component="nav"
-        sx={{ backgroundColor: COLORS.primary }}
+        sx={{ position: "fixed", backgroundColor: COLORS.primary }}
         elevation={1}
       >
         <Toolbar>
@@ -70,7 +32,15 @@ export default function Header() {
             variant="h4"
             sx={{ flexGrow: { xs: 1, sm: 0 }, fontWeight: "bold" }}
           >
-            Infodesign
+            <Link
+              to="/"
+              style={{
+                textDecoration: "none",
+                color: COLORS.white,
+              }}
+            >
+              Infodesign
+            </Link>
           </Typography>
           {/* MENU DESKTOP*/}
           <Box sx={{ display: { xs: "none", sm: "block" }, marginX: "auto" }}>
@@ -101,24 +71,7 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       <Box component="nav">
-        <Drawer
-          anchor="right"
-          variant="temporary"
-          open={active}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            ".MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: 230,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
+        <HeaderDrawer handleDrawerToggle={handleDrawerToggle} active={active} />
       </Box>
     </Box>
   );

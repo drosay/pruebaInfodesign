@@ -1,18 +1,30 @@
-import { useState, useContext, createContext, useMemo } from "react";
-import dayjs from "dayjs";
+import { useState, useContext, createContext, useMemo, useEffect } from "react";
 
 const FilterContext = createContext();
 
 function FilterProvider(props) {
   const [filterData, setFilterData] = useState({
-    fechainicial: dayjs(new Date()),
-    fechafinal: dayjs(new Date()),
-    mostrarComo: "graph",
-    tramo:"",
+    fechainicial: "",
+    fechafinal: "",
+    mostrarComo: "",
+    tramo: "",
     consumption: true,
     losses: true,
     charge: true,
+    validDates: false,
   });
+
+  useEffect(() => {
+    const { fechainicial, fechafinal } = filterData;
+    setFilterData((prev) => ({
+      ...prev,
+      validDates: (() => {
+        if (fechainicial === "" || fechafinal === "") return false;
+        if (fechainicial.isAfter(fechafinal)) return false;
+        return true;
+      })(),
+    }));
+  }, [filterData.fechainicial, filterData.fechafinal]);
 
   const value = useMemo(
     () => ({

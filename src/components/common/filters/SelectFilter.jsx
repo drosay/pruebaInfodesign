@@ -14,7 +14,7 @@ export default function SelectFilter() {
   return (
     <Box
       sx={{
-        width: { sm: "240px", xs: "30%" },
+        width: { sm: "240px", xs: "35%" },
       }}
     >
       <FormControl fullWidth>
@@ -26,6 +26,7 @@ export default function SelectFilter() {
           label="Tramo"
           onChange={handleChange}
         >
+          <MenuItem value={"Todos"}>Todos</MenuItem>
           <MenuItem value={"Tramo 1"}>Tramo 1</MenuItem>
           <MenuItem value={"Tramo 2"}>Tramo 2</MenuItem>
           <MenuItem value={"Tramo 3"}>Tramo 3</MenuItem>

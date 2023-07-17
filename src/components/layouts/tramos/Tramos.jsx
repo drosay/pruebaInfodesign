@@ -10,7 +10,7 @@ import Filters from "../../common/filters/Filters";
 
 export default function Tramos() {
   const {
-    filterData: { mostrarComo, fechainicial, fechafinal },
+    filterData: { mostrarComo, fechainicial, fechafinal, validDates },
   } = useFilterContext();
 
   const [data, setData] = useState([]);
@@ -32,7 +32,9 @@ export default function Tramos() {
         );
       }
     };
-    getData();
+
+    validDates && getData();
+    
   }, [fechainicial, fechafinal]);
 
   return (

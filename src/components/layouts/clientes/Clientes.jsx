@@ -10,7 +10,7 @@ import Filters from "../../common/filters/Filters";
 
 export default function Clientes() {
   const {
-    filterData: { mostrarComo, fechainicial, fechafinal },
+    filterData: { mostrarComo, fechainicial, fechafinal, validDates },
   } = useFilterContext();
 
   const [data, setData] = useState([]);
@@ -22,7 +22,7 @@ export default function Clientes() {
         fechainicial: fechainicial,
         fechafinal: fechafinal,
       });
-      
+
       if (response?.length) {
         setData(response);
         localStorage.setItem("clienteTableData", JSON.stringify(response));
@@ -32,7 +32,7 @@ export default function Clientes() {
         );
       }
     };
-    getData();
+    validDates && getData();
   }, [fechainicial, fechafinal]);
 
   return (

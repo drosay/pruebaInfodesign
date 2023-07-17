@@ -41,8 +41,8 @@ export const TramoTable = ({ data }) => {
           disableDensitySelector
           disableColumnSelector
           disableColumnMenu
-          density="compact"
           hideFooter
+          density="compact"
           sx={{
             fontSize: { sm: SIZES.textSM, xs: SIZES.textXS },
           }}

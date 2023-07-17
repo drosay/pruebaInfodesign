@@ -8,7 +8,7 @@ import { tramoClientTableColumns } from "../../../constants/tableColumns";
 
 export const PaginationTable = () => {
   const {
-    filterData: { fechainicial, fechafinal, tramo },
+    filterData: { fechainicial, fechafinal, tramo, validDates },
   } = useFilterContext();
 
   const [pageState, setPageState] = useState({
@@ -23,7 +23,7 @@ export const PaginationTable = () => {
       setPageState((prev) => ({ ...prev, isLoading: true }));
 
       const response = await fetch_api({
-        endpoint: "tramosHist",
+        endpoint: "tramos-cliente",
         fechainicial: fechainicial,
         fechafinal: fechafinal,
         body: {
@@ -34,15 +34,16 @@ export const PaginationTable = () => {
           tramo: tramo || "Tramo 1",
         },
       });
-
-      setPageState((prev) => ({
-        ...prev,
-        registros: response.registros,
-        data: response.datos,
-        isLoading: false,
-      }));
+      if (response?.datos?.length) {
+        setPageState((prev) => ({
+          ...prev,
+          registros: response.registros,
+          data: response.datos,
+          isLoading: false,
+        }));
+      }
     };
-    getData();
+    validDates && getData();
   }, [
     fechainicial,
     fechafinal,
@@ -52,14 +53,25 @@ export const PaginationTable = () => {
   ]);
 
   const handlePaginationModelChange = ({ page, pageSize }) => {
-    console.log(pageState);
     setPageState((prev) => ({ ...prev, paginationModel: { page, pageSize } }));
   };
 
-  return (
+  return pageState?.data?.length === 0 ? (
+    <Typography
+      variant="h3"
+      sx={{
+        fontSize: { sm: SIZES.subtitleSM, xs: SIZES.subtitleXS },
+        width: "90%",
+        alignSelf: "center",
+      }}
+    >
+      Parece que aún no hay datos, por favor cambia los filtros
+    </Typography>
+  ) : (
     <Box
       sx={{
         width: { sm: "420px", xs: "95%" },
+        maxHeight: { sm: "500px", xs: "300px" },
         mx: "auto",
         mt: { sm: "20px", xs: 0 },
       }}
@@ -68,9 +80,12 @@ export const PaginationTable = () => {
         Tabla de pérdidas por tramo
       </Typography>
       <DataGrid
-        autoHeight
         rows={pageState.data}
         rowCount={pageState.registros}
+        disableColumnFilter
+        disableColumnMenu
+        disableRowSelectionOnClick
+        hideFooterSelectedRowCount
         loading={pageState.isLoading}
         pageSizeOptions={[5, 10, 20, 100]}
         pagination
@@ -79,6 +94,7 @@ export const PaginationTable = () => {
         paginationMode="server"
         columns={tramoClientTableColumns}
         getRowId={(row) => `${row.Linea}-${row.TipoConsumo}-${row.Perdidas}`}
+        density="compact"
         sx={{
           fontSize: { sm: SIZES.textSM, xs: SIZES.textXS },
         }}
